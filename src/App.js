@@ -11,9 +11,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Stocks from "./pages/Stocks";
 import PriceHistory from "./pages/PriceHistory";
-import Quote from "./pages/Quote";
 import Register from "./pages/Register";
-import useSymbols from "./api.js";
 
 function App() {
 
@@ -28,12 +26,9 @@ function App() {
           <Route exact path="/login">
             <Login />
           </Route>
-          <Route exact path="/price-hisotry">
-            <PriceHistory />
-          </Route>
-          <Route exact path="/quote">
-            <Quote />
-          </Route>
+          <Route exact path="/price-history" component={props => PriceHistory(props)}/>
+            {/* <PriceHistory />
+          </Route> */}
           <Route exact path="/register">
             <Register />
           </Route>

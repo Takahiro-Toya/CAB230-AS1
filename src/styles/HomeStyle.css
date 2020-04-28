@@ -1,0 +1,57 @@
+
+.firstheader__item {
+    color: #ffffff;
+}
+
+.firstheader__item:hover {
+    color: #ffff00;
+}
+
+.scondheader__box {
+    color: #000000;
+}
+
+.secondheader__item {
+    color: #ffffff;
+}
+
+.secondheader__item:hover {
+    color: #ff0000;
+}
+
+.options {
+    min-height: 800px;
+    text-align: center;
+    /* background-image: url("img/dining.jpg"); */
+    background-size: cover;
+  }
+  
+
+.options__content {
+    color: #ff0000;
+    padding-top: 25px;
+}
+  
+.options__content a {
+    display: inline-block;
+    color: #ff0000;
+    border: 3px solid #ff0000;
+    border-radius: 3px;
+    padding: 15px 30px;
+    margin-right: 20px;
+    text-decoration: none;
+    font-size: 28px;
+    transition: transform 1s;
+}
+
+.options__content a:hover {
+    color: #ff0000;
+    text-decoration: none;
+    -webkit-transform: scale(1.2);
+    -ms-transform: scale(1,2);
+    transform: scale(1.2);
+}
+  
+.initial-page-container {
+    text-align: center;
+}

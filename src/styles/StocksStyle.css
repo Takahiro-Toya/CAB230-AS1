@@ -1,0 +1,11 @@
+.ag-cell-focus, .ag-cell-no-focus {
+    border: none !important;
+}
+
+.table_style {
+    background-color: darkblue;
+}
+
+.company-list-page-container {
+    text-align: center;
+}
