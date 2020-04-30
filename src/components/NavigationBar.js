@@ -1,6 +1,5 @@
 import React from "react";
 import {Nav, NavItem, NavLink, Navbar} from "reactstrap";
-import "./ComponentStyle.css";
 
 // navigation links
 export default function NavigationBar() {

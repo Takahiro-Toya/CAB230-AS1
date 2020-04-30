@@ -20,7 +20,7 @@ const WelcomMessage = () => (
 );
 
 const Options = () => (   
-    <section class="options" >
+    <section className="options" >
         <div className="options__content">
             <Link to="/stocks">See Stocks</Link>
             {/* <Link to="/quote">Quote</Link>

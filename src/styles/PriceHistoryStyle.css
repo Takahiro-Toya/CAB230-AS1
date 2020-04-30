@@ -1,0 +1,16 @@
+.company-info-container{
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    background-color: #ffffff;
+}
+
+.company-info-container p{
+    display: inline-block;
+    background-color: #ffffff;
+    width: auto;
+    height: 10px;
+    margin: 30px;
+    text-align: center;
+}
+

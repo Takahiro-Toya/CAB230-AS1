@@ -4,11 +4,11 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { Spinner } from 'reactstrap';
 import useCompanyList from '../Api.js'
-import { Link, Redirect, Route } from "react-router-dom";
-import PriceHistory from "./PriceHistory";
+import { Link, Redirect } from "react-router-dom";
+import SearchBar from "../widgets/SearchBar.js"
 
 export default function Stocks() {
-    const [companyInfo, setCompanyInfo] = useState(null);
+    const [selected, setSelected] = useState(null);
     const [search, setSearch] = useState("");
     const { loading, companies, error } = useCompanyList(search);
     const columns = [
@@ -22,13 +22,13 @@ export default function Stocks() {
     }
 
     const rowClicked = (props) => {
-        setCompanyInfo(props.data);
+        setSelected(props.data);
     }
 
-    if (companyInfo !== null) {
+    if (selected !== null) {
         return <Redirect push to={{
             pathname: "/price-history",
-            state: {companyInfo}
+            state: {selected}
         }}
         />;
     }
@@ -37,13 +37,18 @@ export default function Stocks() {
         return <Spinner color="danger" />
     }
     if (error) {
-        return <p>Something went wrong: {error.message}</p>
+        return (
+        <div>
+            <p>Something went wrong: {error.message}</p>
+            <Link to="/home">Back...</Link>
+        </div>
+        )
     }
 
     return (
         <main className="company-list-page-container">
             <div>
-                <SearchBar onSubmit={setSearch} />
+                <SearchBar onSubmit={setSearch} placeholder="type industry name"/>
             </div>
             <div className="container">
                 <div className="ag-theme-balham"
@@ -67,17 +72,3 @@ export default function Stocks() {
     );
 }
 
-function SearchBar(props) {
-    return (
-        <div>
-            <input
-                aria-labelledby="search-button"
-                name="search"
-                id="search"
-                type="search"
-                placeholder="type industry name"
-                onChange={(e) => props.onSubmit(e.target.value)}
-            />
-        </div>
-    )
-}

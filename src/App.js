@@ -2,6 +2,8 @@ import React from 'react';
 import {BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "./styles/HomeStyle.css";
 import "./styles/StocksStyle.css";
+import "./styles/PriceHistoryStyle.css";
+import "./styles/LoginRegisrationStyle.css";
 
 // components
 import Header from "./components/Header";
@@ -20,21 +22,11 @@ function App() {
       <div>
         <Header />
         <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route exact path="/login">
-            <Login />
-          </Route>
+          <Route exact path="/" component={() => Home()}/>
+          <Route exact path="/login" component={() => Login()}/>
           <Route exact path="/price-history" component={props => PriceHistory(props)}/>
-            {/* <PriceHistory />
-          </Route> */}
-          <Route exact path="/register">
-            <Register />
-          </Route>
-          <Route exact path="/stocks">
-            <Stocks />
-          </Route>
+          <Route exact path="/register" component={() => Register()}/>
+          <Route exact path="/stocks" component={() => Stocks()}/>
         </Switch>
       </div>
     </Router>

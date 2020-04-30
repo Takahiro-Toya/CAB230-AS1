@@ -1,0 +1,7 @@
+.form-inline{
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    background-color: #ffffff;
+}
+
