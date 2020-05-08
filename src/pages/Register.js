@@ -1,41 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Form, FormGroup, Label, Input, Button, Alert } from "reactstrap";
 import { Link, Redirect } from "react-router-dom";
-import { register, login } from "../Api.js";
+import { register, login } from "../management/Api.js";
+import { LoginStatus } from "../App.js";
+import HandleLogin from "../management/LoginManagement.js";
 
 export default function Register() {
     const [error, setError] = useState(null);
-    const [loggedIn, setLoggedIn] = useState(false);
+    const [loggedIn, setLoggedIn] = useContext(LoginStatus);
     const submit = (props) => {
         register(props.email, props.password)
         .then(res => {
+            // regisration success
             if (res.statusCode===201) {
                 login(props.email, props.password)
                 .then(res => {
+                    //login success
                     if (res.statusCode===200) {
-                        localStorage.setItem("token", JSON.stringify(res.data.token));
-                        localStorage.setItem("token_type", JSON.stringify(res.data.token_type));
-                        localStorage.setItem("expires", JSON.stringify(res.data.expires));
-                        localStorage.setItem("loginStatus", "ON");
+                        HandleLogin(res);
                         setLoggedIn(true);
+                    // login failed after regisration success
                     } else {
-                        setError({error: true, message: "Oops! Something wrong!"})
+                        setError({error: true, message: "Oops! Something went wrong!"})
                     }
                 })
+                .catch(e => {
+                    setError({error: true, message: "Oops! Something went wrong!"});
+                })
+            // request body incomplete
             } else if (res.statusCode===400) {
                 // override error message
-                setError({error: true, message: "Both Email and Password required"})
+                setError({error: true, message: "Both Email and Password required"});
+            // use already exists
             } else if (res.statusCode===409) {
                 setError(res.data)
             } 
         })
         .catch(e => {
-            setError(e)
+            setError({error: true, message: "Oops! Something went wrong!"});
         });
     }
     
     if (loggedIn) {
-        return <Redirect push to="/stocks"/>
+        return <Redirect push to="/"/>
     }
 
     return (
@@ -46,12 +53,12 @@ export default function Register() {
             <div className="form-inline">
                 {error!==null ? <Alert color="danger">{error.message}</Alert> : null}
             </div>
-            <RegisrationForm onFormSubmit={v => submit(v)}/>
+            <RegistrationForm onFormSubmit={v => submit(v)}/>
         </main>
     );
 }
 
-const RegisrationForm = (props) => {
+const RegistrationForm = (props) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const formSubmit = (event) => {

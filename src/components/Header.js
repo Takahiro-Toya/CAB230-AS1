@@ -1,29 +1,27 @@
-import React, {useState} from "react";
+import React, {useState, useContext} from "react";
 import icon from "../images/icon.png";
 import NavigationBar from "./NavigationBar";
-import {Nav, NavItem, Navbar, NavLink, NavbarBrand, Button} from "reactstrap";
+import {Nav, NavItem, Navbar, NavLink, Button} from "reactstrap";
 import ModalAlert from "./Modal.js";
-
-
+import {LoginStatus} from "../App.js";
+import {HandleLogout} from "../management/LoginManagement.js";
 
 export default function Header() {
-  const [modal, setModal] = useState(false);
-  const toggle = () => setModal(!modal);
+  const [loggedIn, setLoggedIn] = useContext(LoginStatus);
+  const [modalVisible, setModalVisible] = useState(false);
+  const toggleModalVisible = () => setModalVisible(!modalVisible);
   const logout = () => {
-    localStorage.setItem("token", "");
-    localStorage.setItem("toekn_type", "");
-    localStorage.setItem("expires", "");
-    localStorage.setItem("loginStatus", "OFF");
-    toggle();
+    toggleModalVisible();
+    HandleLogout();
+    setLoggedIn(false);
   }
 
   return (
     <header>
-      {/* icon */}
-      <div id="icon">
+      <div >
         <ModalAlert 
-            modal={modal} 
-            toggle={toggle} 
+            isOpen={modalVisible} 
+            toggle={toggleModalVisible} 
             title="Alert!" 
             body="Are you sure to logout?"
             action={logout}
@@ -31,22 +29,21 @@ export default function Header() {
             closeOption="Cancel"/>
         <Navbar color="dark">
           <img src={icon} alt="Icon" height="50" width="50"/>
-          <NavbarBrand>Stock Price</NavbarBrand>
           <Nav>
             <NavItem >
-                {(localStorage.getItem("loginStatus")==="ON") ? 
-                  (<Button className="firstheader__item" onClick={toggle}>Logout</Button>) :
-                  (<NavLink className="firstheader__item" href="/login">Login</NavLink>) 
-                  }
+              {(loggedIn) ? 
+                (<Button className="login_register" onClick={toggleModalVisible}>Logout</Button>) :
+                (<NavLink className="login_register" href="/login">Login</NavLink>) }
             </NavItem>
             <NavItem>
-                <NavLink className="firstheader__item" href="/register">Register</NavLink>
+              {(!loggedIn) ?
+                (<NavLink className="login_register" href="/register">Register</NavLink>) :
+                null }
             </NavItem>
           </Nav>
         </Navbar>
 
       </div>
-
       <NavigationBar />
     </header>
   );

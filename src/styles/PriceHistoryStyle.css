@@ -1,16 +1,25 @@
-.company-info-container{
+
+.date-range-pickers {
     display: flex;
-    flex-wrap: nowrap;
     justify-content: center;
-    background-color: #ffffff;
+    align-items: center;
+    width: 100%;
 }
 
-.company-info-container p{
-    display: inline-block;
-    background-color: #ffffff;
-    width: auto;
-    height: 10px;
-    margin: 30px;
-    text-align: center;
+.pagebody * {
+    margin-bottom: 5px;
 }
+
+.pagebody .button {
+    width: 100%
+}
+
+.date-range-pickers * {
+    margin: 5px;
+}
+
+.company-info-container *{
+    font-size: 20px;
+}
+
 

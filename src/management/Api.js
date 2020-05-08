@@ -33,12 +33,12 @@ const dateAsParameter = (timestamp) => {
  * @param {start date} from 
  * @param {end date} to 
  */
-function getStocksForSymbol(symbol, from = null, to = null) {
-    if (from !== null || to !== null) {
+function getStocksForSymbol(symbol, from = null, to = null, useDateRange = false) {
+    if (useDateRange) {
         const url = baseURL + `stocks/authed/${symbol}?from=${dateAsParameter(from)}&to=${dateAsParameter(to)}`
-        const token = localStorage.getItem("token");
-        const token_type = localStorage.getItem("token_type");
-        const header = { accept: "application/json", Authorization: `${JSON.parse(token_type)} ${JSON.parse(token)}`};
+        const token = sessionStorage.getItem("token");
+        const token_type = sessionStorage.getItem("token_type");
+        const header = { accept: "application/json", Authorization: `${token_type} ${token}`};
         return fetch(url, {
             method: "GET",
             headers: header
@@ -54,7 +54,7 @@ function getStocksForSymbol(symbol, from = null, to = null) {
 export default function useCompanyList(industry = "") {
     const [loading, setLoading] = useState(true);
     const [companies, setCompanies] = useState([]);
-    const [error, setError] = useState(false);
+    const [uncontrolledError, setUncontrolledError] = useState(false);
     useEffect(() => {
         getCompanyList(industry)
             .then((companies) => {
@@ -62,7 +62,7 @@ export default function useCompanyList(industry = "") {
                 setLoading(false);
             })
             .catch((e) => {
-                setError(e);
+                setUncontrolledError(e);
                 setLoading(false);
             });
     }, [industry]);
@@ -70,35 +70,35 @@ export default function useCompanyList(industry = "") {
     return {
         loading,
         companies,
-        error,
+        uncontrolledError,
     };
 }
 
-export function useStockPriceData(symbol, start=null, end=null) {
+export function useStockPriceData(symbol, from=null, to=new Date(), useDateRange=false) {
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState([]);
-    const [error, setError] = useState(false);
+    const [uncontrolledError, setUncontrolledError] = useState(false);
     useEffect(() => {
-        getStocksForSymbol(symbol, start, end)
+        getStocksForSymbol(symbol, from, to, useDateRange)
             .then((res) => {
                 setData(res);
                 setLoading(false);
             })
             .catch((e) => {
-                setError(e);
+                setUncontrolledError(e);
                 setLoading(false);
             })
 
-    }, [symbol, start, end])
+    }, [symbol, from, to])
     return {
         loading, 
         data,
-        error
+        uncontrolledError
     }
 }
 
 export function register(email, password) {
-    const url = `http://131.181.190.87:3000/user/register`;
+    const url = baseURL + "user/register";
     return fetch(url, {
             method: "POST",
             headers: { accept: "application/json", "Content-Type": "application/json" },
@@ -112,11 +112,6 @@ export function register(email, password) {
         return {
             statusCode: res[0],
             data: res[1]
-        }
-    }).catch(e => {
-        return {
-            statusCode: e[0],
-            data: null
         }
     })
 }
@@ -136,11 +131,6 @@ export function login(email, password) {
         return {
             statusCode: res[0],
             data: res[1]
-        }
-    }).catch(e => {
-        return {
-            statusCode: e[0],
-            data: null
         }
     })
 }

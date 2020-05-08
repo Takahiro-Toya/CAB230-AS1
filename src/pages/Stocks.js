@@ -1,24 +1,61 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { AgGridReact } from 'ag-grid-react';
 import "ag-grid-community/dist/styles/ag-grid.css";
-import 'ag-grid-community/dist/styles/ag-theme-balham.css';
-import { Spinner } from 'reactstrap';
-import useCompanyList from '../Api.js'
+import 'ag-grid-community/dist/styles/ag-theme-alpine-dark.css';
+import { Spinner, Input, FormGroup, Form, Label } from 'reactstrap';
+import useCompanyList from '../management/Api.js'
 import { Link, Redirect } from "react-router-dom";
-import SearchBar from "../widgets/SearchBar.js"
+
+function IndustrySearch(props) {
+    return (
+        <div>
+            <Form className="search_section">
+                <FormGroup>
+                    <Label>Type search term</Label>
+                    <Input
+                        type="search"
+                        placeholder="type industry name"
+                        onChange={(e) => props.onChange(e.target.value)}
+                    />
+                </FormGroup>
+                <FormGroup>
+                    <Label>OR</Label>
+                </FormGroup>
+                <FormGroup>
+                    <Label>Select from category</Label>
+                    <Input type="select" onChange={e => props.onChange(e.target.value)}>
+                        <option> </option>
+                        <option>Health Care</option>
+                        <option>Financials</option>
+                        <option>Industrials</option>
+                        <option>Real Estate</option>
+                        <option>Consumer Discretionary</option>
+                        <option>Materials</option>
+                        <option>Information Technology</option>
+                        <option>Energy</option>
+                        <option>Consumer Staples</option>
+                        <option>Telecommunication Services</option>
+                        <option>Utilities</option>
+                    </Input>
+                </FormGroup>
+            </Form>
+        </div>
+    );
+}
 
 export default function Stocks() {
     const [selected, setSelected] = useState(null);
     const [search, setSearch] = useState("");
-    const { loading, companies, error } = useCompanyList(search);
+    const { loading, companies, uncontrolledError } = useCompanyList(search);
     const columns = [
-        { headerName: "Name", field: "name", sortable: true, filter: true, suppressSizeToFit: true },
-        { headerName: "Symbol", field: "symbol", sortable: true, filter: true, suppressSizeToFit: true },
-        { headerName: "Industry", field: "industry", sortable: true, filter: true, suppressSizeToFit: true }
+        { headerName: "Name", field: "name"},
+        { headerName: "Symbol", field: "symbol", filter: "agTextColumnFilter", filterParams: { filterOptions: ["startsWith"] }},
+        { headerName: "Industry", field: "industry"}
     ]
     const defaultColDef = {
-        width: 300,
-        resizable: true
+        flex: 1,
+        filter: true,
+        sortable: true
     }
 
     const rowClicked = (props) => {
@@ -36,22 +73,20 @@ export default function Stocks() {
     if (loading) {
         return <Spinner color="danger" />
     }
-    if (error) {
+    if (uncontrolledError) {
         return (
         <div>
-            <p>Something went wrong: {error.message}</p>
-            <Link to="/home">Back...</Link>
+            <p>Something went wrong: {uncontrolledError.message}</p>
+            <Link to="/">Back...</Link>
         </div>
         )
     }
 
     return (
-        <main className="company-list-page-container">
+        <main className="pagebody">
+            <IndustrySearch onChange={e => setSearch(e)}/>
             <div>
-                <SearchBar onSubmit={setSearch} placeholder="type industry name"/>
-            </div>
-            <div className="container">
-                <div className="ag-theme-balham"
+                <div className="ag-theme-alpine-dark"
                     style={{
                         height: "800px",
                         width: "auto",

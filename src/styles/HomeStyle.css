@@ -1,57 +1,65 @@
 
-.firstheader__item {
-    color: #ffffff;
+.home {
+    text-align: center;
 }
 
-.firstheader__item:hover {
-    color: #ffff00;
+.home_message h1 {
+    color: #ff0000;
 }
 
-.scondheader__box {
+.home_message p {
     color: #000000;
 }
 
-.secondheader__item {
-    color: #ffffff;
-}
-
-.secondheader__item:hover {
-    color: #ff0000;
-}
-
-.options {
-    min-height: 800px;
+.home_options {
     text-align: center;
-    /* background-image: url("img/dining.jpg"); */
-    background-size: cover;
-  }
-  
-
-.options__content {
-    color: #ff0000;
-    padding-top: 25px;
+    margin: 20px;
 }
-  
-.options__content a {
-    display: inline-block;
-    color: #ff0000;
-    border: 3px solid #ff0000;
-    border-radius: 3px;
-    padding: 15px 30px;
+
+.home_options * {
+    margin: 5px;
+}
+
+.home_options ul {
+    margin: 0px;
+    padding: 0px;
+}
+
+.home_options .col1 {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+}
+
+.home_options .col1 li {
+    width: 90%;
+}
+
+.home_options .col2 {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+}
+
+.home_options .col2 li {
+    margin-left: 20px;
     margin-right: 20px;
-    text-decoration: none;
-    font-size: 28px;
+    width: 40%;
+}
+
+.home_options .button {
     transition: transform 1s;
 }
 
-.options__content a:hover {
-    color: #ff0000;
+.home_options .button:hover {
     text-decoration: none;
-    -webkit-transform: scale(1.2);
-    -ms-transform: scale(1,2);
-    transform: scale(1.2);
+    -webkit-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    transform: scale(1.1);
 }
-  
-.initial-page-container {
-    text-align: center;
+
+.background {
+    background-image: linear-gradient(-20deg, #e9defa 0%, #fbfcdb 100%);
+    height: 100vh;
 }
+

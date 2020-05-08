@@ -1,20 +1,20 @@
-import React, {useState} from "react";
+import React, {useState, useContext} from "react";
 import { Form, FormGroup, Label, Input, Button, Alert } from "reactstrap";
-import { Link, Redirect } from "react-router-dom";
-import { login } from "../Api.js";
+import { Link, useHistory, Redirect } from "react-router-dom";
+import { login } from "../management/Api.js";
+import { LoginStatus } from "../App.js";
+import HandleLogin from "../management/LoginManagement.js";
 
 export default function Login() {
+    const [loggedIn, setLoggedIn] = useContext(LoginStatus);
     const [error, setError] = useState(null);
-    const [loggedIn, setLoggeIn] = useState(false);
+    const history = useHistory();
     const submit = (props) => {
         login(props.email, props.password)
         .then(res => {
             if (res.statusCode===200) {
-                localStorage.setItem("token", JSON.stringify(res.data.token))
-                localStorage.setItem("token_type", JSON.stringify(res.data.token_type))
-                localStorage.setItem("expires", JSON.stringify(res.data.expires))
-                localStorage.setItem("loginStatus", "ON")
-                setLoggeIn(true);
+                HandleLogin(res);
+                setLoggedIn(true);
             } else if (res.statusCode===401){
                 setError(res.data)
             } 
@@ -25,7 +25,7 @@ export default function Login() {
     }
 
     if (loggedIn) {
-        return <Redirect push to="/stocks"/>
+        return <Redirect to="/"/>
     }
     
     return (

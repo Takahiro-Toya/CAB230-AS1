@@ -1,13 +1,16 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { useStockPriceData } from "../Api.js";
-import { Spinner, Button } from "reactstrap";
+import React, { useState, useContext, useEffect } from "react";
+import { Link, Redirect } from "react-router-dom";
+import { useStockPriceData } from "../management/Api.js";
+import { Spinner, Button, Container, Row, Col } from "reactstrap";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
-import "ag-grid-community/dist/styles/ag-theme-balham.css";
+import "ag-grid-community/dist/styles/ag-theme-alpine-dark.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Line } from "react-chartjs-2";
+import { LoginStatus } from '../App'
+import {ModalLogin} from "../components/Modal.js";
+
 
 const dateFormatter = (timestamp) => {
     let date = new Date(timestamp);
@@ -16,6 +19,7 @@ const dateFormatter = (timestamp) => {
 
 /**
  * Convert data fetched through Api.js to table-friendly data
+ * 
  * @param {data object} data 
  */
 const dataFormatter = (data) => {
@@ -41,30 +45,11 @@ const dataFormatter = (data) => {
     }
 }
 
-let startDate = null;
-let endDate = null;
-
-
-function StockDatePicker(props) {
-    const [innerStart, setInnerStart] = useState(null);
-    const [innerEnd, setInnerEnd] = useState(null)
-
-    return (
-        <div className="company-info-container">
-            <p>Start date:</p>
-            <DatePicker selected={innerStart} onChange={e => {setInnerStart(e); startDate = e; }}/>
-            <p>End date:</p>
-            <DatePicker selected={innerEnd} onChange={e => {setInnerEnd(e); endDate = e}}/>
-            <Button onClick={() => props.onDateSubmit()}>Search</Button>
-        </div>
-    );    
-}
-
 const LineChartData = (prop) => {
     return {
         labels: prop.map(d => dateFormatter(d.date)).reverse(),
         datasets: [{
-            label: 'Close price line chart',
+            label: 'Close price',
             fill: true,
             lineTension: 0.1,
             backgroundColor: 'rgba(75,192,192,0.4)',
@@ -87,13 +72,35 @@ const LineChartData = (prop) => {
     }
 }
 
+function StockDatePicker(props) {
+    const [start, setStart] = useState(null);
+    const [end, setEnd] = useState(new Date());
+    const submit = (start, end) => {
+        props.onDateSubmit(start, end);
+    }
+
+    return (
+        <div className="date-range-pickers">
+            <p>From:</p>
+            <DatePicker selected={start} onChange={e => setStart(e)} dateFormat="dd-MM-yyyy"/>
+            <Button className="v" color="info" onClick={() => setStart(null)}>×</Button>
+            <p>To:</p>
+            <DatePicker selected={end} onChange={e => {e===null ? setEnd(new Date()) : setEnd(e)}} dateFormat="dd-MM-yyyy"/>
+            <Button color="warning" onClick={() => {submit(start, end)}}>Search</Button>
+        </div>
+    );
+}
+
 export default function PriceHistory(props) {
-//     companyInfo = props.location.state===undefined ? "" : props.location.state.selected;
-    const [companyInfo, setCompanyInfo] = useState(props.location.state===undefined ? "" : props.location.state.selected)
-    const [range, setDateRange] = useState({start: startDate, end: endDate});
-    const { loading, data, error } = useStockPriceData(companyInfo.symbol, range.start, range.end);
+    const [loggedIn, setLoggedIn] = useContext(LoginStatus);
+    const [companyInfo, setCompanyInfo] = useState(props.location.state === undefined ? null : props.location.state.selected)
+    const [range, setDateRange] = useState({start: null, end: new Date()})
+    const { loading, data, uncontrolledError } = useStockPriceData(companyInfo===null ? "" : companyInfo.symbol, 
+                                                                    loggedIn ? range.start : null, 
+                                                                    loggedIn ?  range.end : null,
+                                                                    loggedIn)
     const columns = [
-        { headerName: "Date", field: "date", sortable: true, filter: true },
+        { headerName: "Date", field: "date" },
         { headerName: "Open", field: "open", sortable: true, filter: true },
         { headerName: "High", field: "high", sortable: true, filter: true },
         { headerName: "Low", field: "low", sortable: true, filter: true },
@@ -101,24 +108,29 @@ export default function PriceHistory(props) {
         { headerName: "Volumes", field: "volumes", sortable: true, filter: true }
     ]
     const defaultColDef = {
-        width: 180,
-        resizable: true
+        flex: 1
     }
-    const shouldSearch = () => {
-        // force endDate to be current Date
-        if (endDate === null) {
-            endDate = new Date();
-        }
-        setDateRange({start: startDate, end: endDate})
+
+    const shouldSearch = (start, end) => {
+        setDateRange({ start: start, end: end })
+    }
+
+    const [modalVisible, setModalVisible] = useState(false);
+    const toggleModalVisible = () => setModalVisible(!modalVisible);
+
+    // redirect to previous page if copmany info is not selected
+    // this can happen when the user types URL (../price-history) directly in the browser
+    if (companyInfo===null) {
+        return <Redirect to="/stocks"/>
     }
 
     if (loading) {
         return <Spinner color="danger" />
     }
-    if (error) {
+    if (uncontrolledError) {
         return (
             <div>
-                <p>Something went wrong: {error.message}</p>
+                <p>Something went wrong: {uncontrolledError.message}</p>
                 <Link to="/stocks">Back...</Link>
             </div>
         );
@@ -126,21 +138,24 @@ export default function PriceHistory(props) {
 
     return (
         <main>
-            <div className="container">
-                <div className="company-info-container">
-                    <p>{companyInfo.name}</p>
-                    <p>{companyInfo.symbol}</p>
-                    <p>{companyInfo.industry}</p>
+            <div className="pagebody">
+                <ModalLogin 
+                    isOpen={modalVisible}
+                    toggle={toggleModalVisible}
+                />
+                <Container className="company-info-container">
+                    <Row>
+                        <Col>{companyInfo.name}</Col>
+                        <Col>{companyInfo.symbol}</Col>
+                        <Col>{companyInfo.industry}</Col>
+                    </Row>
+                </Container>
+                <div>
+                    {loggedIn ?
+                    <StockDatePicker onDateSubmit={(a, b) => shouldSearch(a, b)}/> :
+                    <Button className="button" color="warning" onClick={toggleModalVisible}>Login to see price history!</Button>}
                 </div>
-                {(localStorage.getItem("loginStatus")==="ON") ? 
-                    <div className="company-info-container">
-                        <StockDatePicker onDateSubmit={shouldSearch}/>
-                    </div> :
-                    <div>
-                        <Link to="/login" color="warning">Login to see price history!</Link>
-                    </div>
-                }
-                <div className="ag-theme-balham"
+                <div className="ag-theme-alpine-dark"
                     style={{
                         height: "300px",
                         width: "auto",
@@ -154,8 +169,8 @@ export default function PriceHistory(props) {
                         overlayNoRowsTemplate={data.error ? data.message : "No record found"}
                         defaultColDef={defaultColDef} />
                 </div>
-                {(localStorage.getItem("loginStatus")==="ON") ? 
-                    <Line data={LineChartData(dataFormatter(data))}/>
+                {loggedIn ?
+                    <Line data={LineChartData(dataFormatter(data))} />
                     : null
                 }
             </div>

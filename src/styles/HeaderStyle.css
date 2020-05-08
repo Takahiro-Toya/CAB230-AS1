@@ -1,0 +1,19 @@
+
+.login_register {
+    color: #fff;
+}
+
+.login_register:hover {
+    color: #ffd900;
+    -webkit-transform: scale(1.2);
+    -ms-transform: scale(1.2);
+    transform: scale(1.2);
+}
+
+.page_items {
+    color: #fff;
+}
+
+.page_items:hover {
+    color: #ff0000;
+}
