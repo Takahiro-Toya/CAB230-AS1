@@ -1,7 +1,7 @@
 import React, {useState, useContext} from "react";
 import icon from "../images/icon.png";
 import NavigationBar from "./NavigationBar";
-import {Nav, NavItem, Navbar, NavLink, Button} from "reactstrap";
+import {Nav, NavItem, Navbar, NavLink, NavbarBrand, Button} from "reactstrap";
 import ModalAlert from "./Modal.js";
 import {LoginStatus} from "../App.js";
 import {HandleLogout} from "../management/LoginManagement.js";
@@ -28,7 +28,10 @@ export default function Header() {
             option="Logout"
             closeOption="Cancel"/>
         <Navbar color="dark">
-          <img src={icon} alt="Icon" height="50" width="50"/>
+          <NavLink href="/">
+            <img src={icon} alt="Icon" height="50" width="50"/>
+          </NavLink>
+          <NavbarBrand　className="brand_title" href="/">¡Stocks!</NavbarBrand>
           <Nav>
             <NavItem >
               {(loggedIn) ? 

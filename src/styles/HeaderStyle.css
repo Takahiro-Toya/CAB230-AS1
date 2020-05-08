@@ -17,3 +17,11 @@
 .page_items:hover {
     color: #ff0000;
 }
+
+.brand_title {
+    color: #fff;
+}
+
+.brand_title:hover {
+    color: #ff0000;
+}

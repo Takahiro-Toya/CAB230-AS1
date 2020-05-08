@@ -10,12 +10,10 @@ function getCompanyList(industry = "") {
     if (industry !== "") {
         return (
             fetch(baseURL + `stocks/symbols/?industry=${industry}`)
-            .then((res) => res.json())
         );
     } else {    
         return (
             fetch(baseURL + 'stocks/symbols/')
-            .then((res) => res.json())
         );
     }
 }
@@ -43,23 +41,27 @@ function getStocksForSymbol(symbol, from = null, to = null, useDateRange = false
             method: "GET",
             headers: header
         })
-        .then((res) => res.json())
     } else {
         return fetch(baseURL + `stocks/${symbol}`)
-        .then((res) => res.json())
     }
-
 }
 
 export default function useCompanyList(industry = "") {
     const [loading, setLoading] = useState(true);
-    const [companies, setCompanies] = useState([]);
+    const [statusCode, setStatusCode] = useState(null);
+    const [data, setData] = useState([]);
     const [uncontrolledError, setUncontrolledError] = useState(false);
     useEffect(() => {
         getCompanyList(industry)
-            .then((companies) => {
-                setCompanies(companies);
+            .then((res) => {
+                const status = res.status;
+                const data = res.json()
+                return Promise.all([status, data])
+            })
+            .then(res => {
                 setLoading(false);
+                setStatusCode(res[0]);
+                setData(res[1]);
             })
             .catch((e) => {
                 setUncontrolledError(e);
@@ -69,20 +71,28 @@ export default function useCompanyList(industry = "") {
 
     return {
         loading,
-        companies,
+        statusCode,
+        data,
         uncontrolledError,
     };
 }
 
 export function useStockPriceData(symbol, from=null, to=new Date(), useDateRange=false) {
     const [loading, setLoading] = useState(true);
+    const [statusCode, setStatusCode] = useState(null);
     const [data, setData] = useState([]);
     const [uncontrolledError, setUncontrolledError] = useState(false);
     useEffect(() => {
         getStocksForSymbol(symbol, from, to, useDateRange)
             .then((res) => {
-                setData(res);
+                const status = res.status;
+                const data = res.json();
+                return Promise.all([status, data])
+            })
+            .then(res => {
                 setLoading(false);
+                setStatusCode(res[0]);
+                setData(res[1]);
             })
             .catch((e) => {
                 setUncontrolledError(e);
@@ -91,7 +101,8 @@ export function useStockPriceData(symbol, from=null, to=new Date(), useDateRange
 
     }, [symbol, from, to])
     return {
-        loading, 
+        loading,
+        statusCode, 
         data,
         uncontrolledError
     }

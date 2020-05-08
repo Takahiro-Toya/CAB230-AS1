@@ -46,7 +46,7 @@ function IndustrySearch(props) {
 export default function Stocks() {
     const [selected, setSelected] = useState(null);
     const [search, setSearch] = useState("");
-    const { loading, companies, uncontrolledError } = useCompanyList(search);
+    const { loading, statusCode, data, uncontrolledError } = useCompanyList(search);
     const columns = [
         { headerName: "Name", field: "name"},
         { headerName: "Symbol", field: "symbol", filter: "agTextColumnFilter", filterParams: { filterOptions: ["startsWith"] }},
@@ -94,10 +94,10 @@ export default function Stocks() {
                     }}>
                     <AgGridReact
                         columnDefs={columns}
-                        rowData={companies.error ? [] : companies}
+                        rowData={data.error ? [] : data}
                         pagination={true}
                         paginationPageSize={25}
-                        overlayNoRowsTemplate={companies.error ? companies.message : "no record found"}
+                        overlayNoRowsTemplate={data.error ? data.message : "no record found"}
                         onRowClicked={e => rowClicked(e)}
                         defaultColDef={defaultColDef}
                     />

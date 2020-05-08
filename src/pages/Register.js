@@ -20,6 +20,7 @@ export default function Register() {
                         HandleLogin(res);
                         setLoggedIn(true);
                     // login failed after regisration success
+                    // but, this should not happen
                     } else {
                         setError({error: true, message: "Oops! Something went wrong!"})
                     }
@@ -30,10 +31,10 @@ export default function Register() {
             // request body incomplete
             } else if (res.statusCode===400) {
                 // override error message
-                setError({error: true, message: "Both Email and Password required"});
+                setError({error: true, message: "Both Email and Password required."});
             // use already exists
             } else if (res.statusCode===409) {
-                setError(res.data)
+                setError({error: true, message: "User already exists! Try another email address."});
             } 
         })
         .catch(e => {
