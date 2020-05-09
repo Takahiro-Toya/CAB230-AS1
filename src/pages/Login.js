@@ -1,31 +1,38 @@
 import React, {useState, useContext} from "react";
-import { Form, FormGroup, Label, Input, Button, Alert } from "reactstrap";
-import { Link, useHistory, Redirect } from "react-router-dom";
+import { Alert } from "reactstrap";
+import { Link, Redirect } from "react-router-dom";
 import { login } from "../management/Api.js";
 import { LoginStatus } from "../App.js";
 import HandleLogin from "../management/LoginManagement.js";
+import {AuthenticationForm} from "../widgets/AuthenticationForm.js";
+import { ForceRedirect } from "../widgets/ErrorHandler.js";
 
 export default function Login() {
     const [loggedIn, setLoggedIn] = useContext(LoginStatus);
-    const [error, setError] = useState(null);
-    const history = useHistory();
+    const [statusCode, setStatusCode] = useState(null);
+    const [response, setResponse] = useState(null);
+    const [uncontrolledError, setUnControlledError] = useState(null);
     const submit = (props) => {
         login(props.email, props.password)
         .then(res => {
             if (res.statusCode===200) {
                 HandleLogin(res);
                 setLoggedIn(true);
-            } else if (res.statusCode===401){
-                setError(res.data)
             } 
+            setResponse(res.data);
+            setStatusCode(res.statusCode);
         })
         .catch(e => {
-            setError(e)
+            setUnControlledError(e)
         });
     }
 
     if (loggedIn) {
         return <Redirect to="/"/>
+    }
+
+    if (uncontrolledError) {
+        return <ForceRedirect message={uncontrolledError.message}/>
     }
     
     return (
@@ -34,43 +41,10 @@ export default function Login() {
                 <Link to="/register">Not a member? Register here</Link>
             </div>
             <div className="form-inline">
-                {error != null ? <Alert color="danger">{error.message}</Alert> : null}
+                {statusCode===200 ? <Alert color="success">Successful Login!</Alert> : null}
+                {statusCode===401 ? <Alert color="danger">{response.message}</Alert> : null}
             </div>
-            <LoginForm onFormSubmit={v => submit(v)}/>
+            <AuthenticationForm onFormSubmit={v => submit(v)} formType="login"/>
         </main>
-    );
-}
-
-const LoginForm = (props) => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const formSubmit = (event) => {
-        event.preventDefault()
-        props.onFormSubmit({email:email, password:password});
-    }
-    return (
-        <Form className="container" onSubmit={(e) => formSubmit(e)}>
-            <FormGroup>
-                <Label for="email">Email</Label>
-                <Input 
-                    type="email" 
-                    name="email" 
-                    id="loginEmail" 
-                    placeholder="email address"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}/>
-            </FormGroup>
-            <FormGroup>
-                <Label for="password">Password</Label>
-                <Input 
-                    type="password" 
-                    name="password" 
-                    id="loginPassword" 
-                    placeholder="password"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}/>
-            </FormGroup>
-            <Button type="submit" color="warning">Login</Button>
-        </Form>
     );
 }
