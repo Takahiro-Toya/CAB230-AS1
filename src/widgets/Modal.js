@@ -1,9 +1,5 @@
-import React, {useState, useHistory, useContext} from "react";
-import {Link} from "react-router-dom";
-import {Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, Alert} from "reactstrap";
-import { login } from "../management/Api.js";
-import HandleLogin from "../management/LoginManagement.js";
-import {LoginStatus} from "../App.js";
+import React from "react";
+import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from "reactstrap";
 
 export default function ModalAlert(props) {
   

@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import {Nav, NavItem, NavLink, Navbar, Label} from "reactstrap";
+import React from "react";
+import {Nav, NavItem, NavLink, Navbar } from "reactstrap";
 
 // navigation links
 export default function NavigationBar() {

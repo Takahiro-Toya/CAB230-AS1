@@ -7,7 +7,7 @@ import "./styles/LoginRegistrationStyle.css";
 import "./styles/HeaderStyle.css";
 
 // components
-import Header from "./components/Header";
+import Header from "./page-components/Header";
 
 // pages
 import Home from "./pages/Home";

@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { useStockPriceData } from "../management/Api.js";
 import { Spinner, Button, Container, Row, Col, Alert } from "reactstrap";
 import { LoginStatus } from '../App'

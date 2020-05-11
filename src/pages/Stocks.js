@@ -32,7 +32,7 @@ export default function Stocks() {
 
     return (
         <main className="pagebody">
-            {statusCode===404 ? <Alert color="danger">{"Oops! Industry sector not found"}</Alert> : null}
+            {statusCode===404 ? <Alert color="danger">Oops! {data.message}</Alert> : null}
             <IndustrySearch onChange={e => setSearch(e)}/>
             <CompanyListTable data={data} rowClicked={rowClicked}/>
         </main>

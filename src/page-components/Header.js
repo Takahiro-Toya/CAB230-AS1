@@ -2,7 +2,7 @@ import React, {useState, useContext} from "react";
 import icon from "../images/icon.png";
 import NavigationBar from "./NavigationBar";
 import {Nav, NavItem, Navbar, NavLink, NavbarBrand, Button} from "reactstrap";
-import ModalAlert from "./Modal.js";
+import ModalAlert from "../widgets/Modal.js";
 import {LoginStatus} from "../App.js";
 import {HandleLogout} from "../management/LoginManagement.js";
 

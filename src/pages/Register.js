@@ -30,14 +30,12 @@ export default function Register() {
                 .catch(e => {
                     setUncontrolledError(e);
                 })
-            // request body incomplete
             } else {
                 setResponse(res.data);
                 setStatusCode(res.statusCode);   
             }
         })
         .catch(e => {
-            // setError({error: true, message: "Oops! Something went wrong!"});
             setUncontrolledError(e);
         });
     }
@@ -59,7 +57,6 @@ export default function Register() {
                 {statusCode===201 ? <Alert color="success">Successful regisration!</Alert> : null}
                 {statusCode===400 ? <Alert color="danger">Oops! {response.message}</Alert> : null}
                 {statusCode===409 ? <Alert color="danger">Oops! {response.message}</Alert> : null}
-                {/* {error!==null ? <Alert color="danger">{error.message}</Alert> : null} */}
             </div>
             <AuthenticationForm onFormSubmit={v => submit(v)} formType="register"/>
         </main>
