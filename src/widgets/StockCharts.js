@@ -3,12 +3,22 @@ import { Line } from "react-chartjs-2";
 import ReactApexChart from "react-apexcharts";
 import { dataFormatter, dataFormatterForCandleStick, LineChartData } from "../helpers/Formatters.js";
 
+/**
+ * Line Chart view
+ * @param {*} props data: set of price history data (no need to convert)
+ *                  height: chart view height
+ */
 export function LineChart(props) {
     return (
         <Line data={LineChartData(dataFormatter(props.data))} height={props.height} />
     )
 }
 
+/**
+ * Candle stick view
+ * @param {*} props data: set of data (no need to convert)
+ *                  height: chart view height
+ */
 export function CandleStickChart(props) {
 
     const candleOptions = {

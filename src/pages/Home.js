@@ -2,6 +2,9 @@ import React, { useContext } from "react";
 import { LoginStatus } from "../App.js";
 import { Button } from "reactstrap";
 
+/**
+ * Home page
+ */
 export default function Home() {
     const [loggedIn, setLoggedIn] = useContext(LoginStatus);
     return (
@@ -12,6 +15,9 @@ export default function Home() {
     );
 }
 
+/**
+ * welcome message
+ */
 const WelcomMessage = () => (
     <div className="home_message">
         <h1>Stock Prices</h1>
@@ -20,15 +26,24 @@ const WelcomMessage = () => (
     </div>
 );
 
+/**
+ * Displays options available in the home page
+ * @param {*} props 
+ */
 const Options = (props) => (   
     <div className="home_options">
         <ul className="col1">
             <li><Button className="button" color="success" href="/stocks" size="lg" block>See company list</Button></li>
         </ul>
+        {/* only displays below if NOT logged in */}
         {props.shouldHidden ? null : <h2>OR</h2>}
-        <ul className="col2">
-            <li>{props.shouldHidden ? null : <Button className="button" color="warning" href="/login" block>Login</Button>}</li>
-            <li>{props.shouldHidden ? null : <Button className="button" color="warning" href="/register" block>Become a member to access full features</Button>}</li>
-        </ul>
+        {props.shouldHidden ?
+            null :
+            <ul className="col2">
+                <li><Button className="button" color="warning" href="/login" block>Login</Button></li>
+                <li><Button className="button" color="warning" href="/register" block>Become a member to access full features</Button></li>
+            </ul>
+        }
+
     </div>
 );

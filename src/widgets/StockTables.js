@@ -2,9 +2,12 @@ import React from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine-dark.css";
-
 import { dataFormatter } from "../helpers/Formatters.js";
 
+/**
+ * Company list table
+ * @param {*} props data: response object {name, symbol, industry} OR {error, message}
+ */
 export function CompanyListTable(props) {
     const columns = [
         { headerName: "Name", field: "name"},
@@ -37,6 +40,11 @@ export function CompanyListTable(props) {
     );
 }
 
+/**
+ * Price history data table
+ * @param {} props data: response objecct (no need to pre-convert)
+ *                  height: height of this view
+ */
 export function StockTable(props) {
     const columns = [
         { headerName: "Date", field: "date" },

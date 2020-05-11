@@ -7,6 +7,9 @@ import HandleLogin from "../management/LoginManagement.js";
 import {AuthenticationForm} from "../widgets/AuthenticationForm.js";
 import { ForceRedirect } from "../widgets/ErrorHandler.js";
 
+/**
+ * Login page
+ */
 export default function Login() {
     const [loggedIn, setLoggedIn] = useContext(LoginStatus);
     const [statusCode, setStatusCode] = useState(null);
@@ -15,6 +18,7 @@ export default function Login() {
     const submit = (props) => {
         login(props.email, props.password)
         .then(res => {
+            // successful login
             if (res.statusCode===200) {
                 HandleLogin(res);
                 setLoggedIn(true);
@@ -31,6 +35,7 @@ export default function Login() {
         return <Redirect to="/"/>
     }
 
+    // network error
     if (uncontrolledError) {
         return <ForceRedirect message={uncontrolledError.message}/>
     }
@@ -40,6 +45,7 @@ export default function Login() {
             <div className="form-inline">
                 <Link to="/register">Not a member? Register here</Link>
             </div>
+            { /* Shows alert according to status code */}
             <div className="form-inline">
                 {statusCode===200 ? <Alert color="success">Successful Login!</Alert> : null}
                 {statusCode===401 ? <Alert color="danger">{response.message}</Alert> : null}

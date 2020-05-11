@@ -7,6 +7,9 @@ import HandleLogin from "../management/LoginManagement.js";
 import {AuthenticationForm} from "../widgets/AuthenticationForm.js";
 import { ForceRedirect } from "../widgets/ErrorHandler.js";
 
+/**
+ * Registration page
+ */
 export default function Register() {
     const [uncontrolledError, setUncontrolledError] = useState(null);
     const [statusCode, setStatusCode] = useState(null); 
@@ -44,6 +47,7 @@ export default function Register() {
         return <Redirect push to="/"/>
     }
 
+    // network error
     if (uncontrolledError) {
         return <ForceRedirect message={uncontrolledError.message}/>
     }
@@ -54,6 +58,7 @@ export default function Register() {
                 <Link to="/login">Already a member? Login here</Link>
             </div>
             <div className="form-inline">
+                { /* shows alert according to status code */}
                 {statusCode===201 ? <Alert color="success">Successful regisration!</Alert> : null}
                 {statusCode===400 ? <Alert color="danger">Oops! {response.message}</Alert> : null}
                 {statusCode===409 ? <Alert color="danger">Oops! {response.message}</Alert> : null}

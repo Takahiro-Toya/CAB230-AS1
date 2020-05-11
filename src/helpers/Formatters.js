@@ -1,8 +1,17 @@
+
+/**
+ * Converts timestamp to format (YYYY-MM-DD);
+ * @param {timestamp} timestamp 
+ */
 const dateFormatter = (timestamp) => {
     let date = new Date(timestamp);
     return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
 }
 
+/**
+ * Converts fetched data to table friendly data
+ * @param {data object from api (json-ed)} data 
+ */
 export const dataFormatter = (data) => {
     try {
         return data.map(d => ({
@@ -26,6 +35,10 @@ export const dataFormatter = (data) => {
     }
 }
 
+/**
+ * Converts price history data for candle stick chart
+ * @param {price history data object} data 
+ */
 export const dataFormatterForCandleStick = (data) => {
     return dataFormatter(data).map(d => ({
         x: d.date,
@@ -33,6 +46,10 @@ export const dataFormatterForCandleStick = (data) => {
     }));
 }
 
+/**
+ * Converts price history data for line chart 
+ * @param {price history data object} prop 
+ */
 export const LineChartData = (prop) => {
     return {
         labels: prop.map(d => dateFormatter(d.date)).reverse(),

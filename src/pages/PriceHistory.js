@@ -9,7 +9,10 @@ import { StockTable } from "../widgets/StockTables.js";
 import { ModalLogin } from "../widgets/AuthenticationForm.js";
 import { ForceRedirect } from "../widgets/ErrorHandler.js";
 
-
+/**
+ * Price history page
+ * @param {*} props Selected company data {name, symbol, industry}
+ */
 export default function PriceHistory(props) {
     const [loggedIn, setLoggedIn] = useContext(LoginStatus);
     const [companyInfo, setCompanyInfo] = useState(props.location.state === undefined ? null : props.location.state.selected)
@@ -36,6 +39,7 @@ export default function PriceHistory(props) {
         return <Spinner color="danger" />
     }
 
+    // network error
     if (uncontrolledError) {
         return <ForceRedirect message={uncontrolledError.message}/>
     }
@@ -43,6 +47,7 @@ export default function PriceHistory(props) {
     return (
         <main>
             <div className="pagebody">
+                { /* show alerts according to status code */}
                 {statusCode===403 ? <Alert color="danger">{"Oops! Something wrong! Logout and login again!"}</Alert> : null}
                 {statusCode===404 ? <Alert color="danger">Sorry {data.message}</Alert> : null}
                 <ModalLogin isOpen={modalVisible} toggle={toggleModalVisible}/>
@@ -54,11 +59,13 @@ export default function PriceHistory(props) {
                     </Row>
                 </Container>
                 <div>
+                    { /* date pickers are hidden when NOT logged in, instead a button to let then user login is shown */}
                     {loggedIn ?
                     <StockDatePicker onDateSubmit={(a, b) => shouldSearch(a, b)}/> :
                     <Button className="button" color="warning" onClick={toggleModalVisible}>Login to see price history!</Button>}
                 </div>
                 <StockTable data={data} height={300}/>
+                { /* Show charts only when logged in */}
                 {loggedIn ? <LineChart data={data} height={90}/> : null}
                 {loggedIn ? <CandleStickChart data={data} height={350}/> : null}
             </div>

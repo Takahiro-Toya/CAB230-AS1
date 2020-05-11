@@ -3,8 +3,8 @@ import { useState, useEffect } from 'react'
 const baseURL = `http://131.181.190.87:3000/`;
 
 /**
- * Returns 
- *  Company name, Company symbol, Industry 
+ * Returns fetch result 
+ * @param {string} industry 
  */
 function getCompanyList(industry = "") {
     if (industry !== "") {
@@ -18,6 +18,11 @@ function getCompanyList(industry = "") {
     }
 }
 
+/**
+ * Format timestamp to the format used in from/to parameter in
+ *  /stockes/authed/{symbol}/from...
+ * @param {string} timestamp 
+ */
 const dateAsParameter = (timestamp) => {
     const fullDate = new Date(timestamp);
     const date = ("0" + fullDate.getDate()).slice(-2);
@@ -27,9 +32,9 @@ const dateAsParameter = (timestamp) => {
 
 /**
  * Returns stock prices between 'from' Date to 'to' Date
- * @param {company symbol} symbol 
- * @param {start date} from 
- * @param {end date} to 
+ * @param {string} symbol 
+ * @param {string} from 
+ * @param {string} to 
  */
 function getStocksForSymbol(symbol, from = null, to = null, useDateRange = false) {
     if (useDateRange) {
@@ -46,6 +51,10 @@ function getStocksForSymbol(symbol, from = null, to = null, useDateRange = false
     }
 }
 
+/**
+ * A hook for company list
+ * @param {string} industry 
+ */
 export default function useCompanyList(industry = "") {
     const [loading, setLoading] = useState(true);
     const [statusCode, setStatusCode] = useState(null);
@@ -77,6 +86,13 @@ export default function useCompanyList(industry = "") {
     };
 }
 
+/**
+ * A hook for price history 
+ * @param {string} symbol 
+ * @param {string} from 
+ * @param {string} to 
+ * @param {boolean} useDateRange 
+ */
 export function useStockPriceData(symbol, from=null, to=new Date(), useDateRange=false) {
     const [loading, setLoading] = useState(true);
     const [statusCode, setStatusCode] = useState(null);
@@ -108,6 +124,11 @@ export function useStockPriceData(symbol, from=null, to=new Date(), useDateRange
     }
 }
 
+/**
+ * Requests registering new memer
+ * @param {string} email 
+ * @param {string} password 
+ */
 export function register(email, password) {
     const url = baseURL + "user/register";
     return fetch(url, {
@@ -127,6 +148,11 @@ export function register(email, password) {
     })
 }
 
+/**
+ * Requests token to the server
+ * @param {string} email 
+ * @param {string} password 
+ */
 export function login(email, password) {
     const url = baseURL + "user/login";
     return fetch(url, {

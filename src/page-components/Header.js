@@ -6,6 +6,9 @@ import ModalAlert from "../widgets/Modal.js";
 import {LoginStatus} from "../App.js";
 import {HandleLogout} from "../management/LoginManagement.js";
 
+/**
+ * Header includes NavigationBar and link to login/registration
+ */
 export default function Header() {
   const [loggedIn, setLoggedIn] = useContext(LoginStatus);
   const [modalVisible, setModalVisible] = useState(false);

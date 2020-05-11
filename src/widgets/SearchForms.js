@@ -3,6 +3,10 @@ import { Button, Form, FormGroup, Label, Input } from "reactstrap";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+/**
+ * Date picker and buttons
+ * @param {*} props onClick: called when search button clicked
+ */
 export function StockDatePicker(props) {
     const [start, setStart] = useState(null);
     const [end, setEnd] = useState(new Date());
@@ -22,6 +26,10 @@ export function StockDatePicker(props) {
     );
 }
 
+/**
+ * Industry search form 
+ * @param {*} props onChange: called when value cahnged
+ */
 export function IndustrySearch(props) {
     return (
         <div>

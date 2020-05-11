@@ -1,7 +1,9 @@
 import React from "react";
 import {Nav, NavItem, NavLink, Navbar } from "reactstrap";
 
-// navigation links
+/**
+ * Navigation is a bar that contains navigation link to other pages
+ */
 export default function NavigationBar() {
     return (
         <div>

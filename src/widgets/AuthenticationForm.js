@@ -8,7 +8,8 @@ import {LoginStatus} from "../App.js";
 /**
  * Provides simple login/regisration form with 
  * two input fields for email and password, and a button to submit
- * @param {onFormSubmit -called when submit button clicked, formType -either "login" OR 'register'} props 
+ * @param {*} props onFormSubmit => passed an object {email, password}, 
+ *                  formType: "login" OR "register"
  */
 export const AuthenticationForm = (props) => {
     const [email, setEmail] = useState("");
@@ -46,6 +47,12 @@ export const AuthenticationForm = (props) => {
     );
 }
 
+/**
+ * A small login form that can be called from anywhere on the site
+ * Only interface difference, it does exactly same thing with normal login form
+ * @param {*} props isOpen: defines if modal should be appeared
+ *                  toggle: a method that changes isOpen state
+ */
 export function ModalLogin(props) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");

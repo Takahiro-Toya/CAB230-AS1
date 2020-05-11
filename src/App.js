@@ -16,6 +16,8 @@ import Stocks from "./pages/Stocks";
 import PriceHistory from "./pages/PriceHistory";
 import Register from "./pages/Register";
 
+// holds login state (True OR false)
+// shared between all pages
 export const LoginStatus = React.createContext();
 
 function App() {

@@ -6,6 +6,9 @@ import { CompanyListTable } from "../widgets/StockTables.js";
 import { IndustrySearch } from "../widgets/SearchForms.js";
 import { ForceRedirect } from "../widgets/ErrorHandler.js";
 
+/**
+ * Company list page
+ */
 export default function Stocks() {
     const [selected, setSelected] = useState(null);
     const [search, setSearch] = useState("");
@@ -26,12 +29,15 @@ export default function Stocks() {
     if (loading) {
         return <Spinner color="danger" />
     }
+
+    // network error
     if (uncontrolledError) {
         return <ForceRedirect message={uncontrolledError.message}/>
     }
 
     return (
         <main className="pagebody">
+            { /* shows alert according to status code */}
             {statusCode===404 ? <Alert color="danger">Oops! {data.message}</Alert> : null}
             <IndustrySearch onChange={e => setSearch(e)}/>
             <CompanyListTable data={data} rowClicked={rowClicked}/>
